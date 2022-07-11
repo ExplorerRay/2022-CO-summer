@@ -11,6 +11,17 @@ main:
 		li	$t0, 0
 		jal	printarr
 		
+#sort
+		
+#print msg2
+		li	$v0, 4
+		la	$a0, msg2
+		syscall
+#print array
+		la	$t1, array1 	# load address of array
+		li	$t0, 0
+		jal	printarr
+#exit
 		li	$v0, 10
 		syscall
 		
