@@ -1,29 +1,29 @@
 .text
 .globl main
 main:
-#print msg1
+	#print msg1
 		li      $v0, 4		# call system call: print string
 		la      $a0, msg1	# load address of string into $a0
 		syscall                 # run the syscall
 
-#print array
+	#print array
 		la	$t1, array1 	# load address of array
 		li	$t0, 0		# initialize the counter to 0 (i=0)
 		jal	printarr
 		
-#sort		
+	#sort		
 		la	$a0, array1	# move parameter for calling bbsort ($a0 = v) ($a0 = the address of v)
 		addi	$a1, $zero, 10	# $a1 = 10 (n=10)
 		jal	bbsort		
-#print msg2 (almost the same as print msg1)
+	#print msg2 (almost the same as print msg1)
 		li	$v0, 4
 		la	$a0, msg2
 		syscall
-#print array
+	#print array
 		la	$t1, array1 	# load address of array
 		li	$t0, 0		# initialize the counter to 0 (i=0)
 		jal	printarr
-#exit
+	#exit
 		li	$v0, 10
 		syscall
 		
