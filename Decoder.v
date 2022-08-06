@@ -3,28 +3,28 @@ module Decoder( instr_op_i, RegWrite_o,	ALUOp_o, ALUSrc_o, RegDst_o, Branch_o, B
 //I/O ports
 input	[3-1:0] instr_op_i;
 
-output			RegWrite_o;
+output		RegWrite_o;
 output	[2-1:0] ALUOp_o;
-output			ALUSrc_o;
+output		ALUSrc_o;
 output	        RegDst_o;
-output			Branch_o;
-output			BranchType_o;
-output			MemToReg_o;
-output			MemRead_o;
-output			MemWrite_o; 
-output			Jump_o;
+output		Branch_o;
+output		BranchType_o;
+output		MemToReg_o;
+output		MemRead_o;
+output		MemWrite_o; 
+output		Jump_o;
 
 //Internal Signals
-wire			RegWrite_o;
+wire		RegWrite_o;
 wire	[2-1:0] ALUOp_o;
-wire			ALUSrc_o;
+wire		ALUSrc_o;
 wire	        RegDst_o;
-wire			Branch_o;
-wire			BranchType_o;
-wire			MemToReg_o;
-wire			MemRead_o;
-wire			MemWrite_o; 
-wire			Jump_o;
+wire		Branch_o;
+wire		BranchType_o;
+wire		MemToReg_o;
+wire		MemRead_o;
+wire		MemWrite_o; 
+wire		Jump_o;
 
 //Main function
 assign RegWrite_o = (instr_op_i[2] == 1'b1) ? 0 : 1;  // one 2-to-1 MUX

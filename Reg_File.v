@@ -21,7 +21,7 @@ wire        [16-1:0] RTdata_o;
 assign RSdata_o = Reg_File[RSaddr_i] ;
 assign RTdata_o = Reg_File[RTaddr_i] ;   
 
-//Writing data when postive edge clk_i and RegWrite_i was set.
+//Writing data when negative edge clk_i and RegWrite_i was set.
 always @( negedge rst_n or negedge clk_i  ) begin
     if(rst_n == 0) begin
 	    Reg_File[0]  <= 0; Reg_File[1]  <= 0; Reg_File[2]  <= 0; Reg_File[3]  <= 0;
