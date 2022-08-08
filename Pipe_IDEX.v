@@ -1,8 +1,10 @@
-module Pipe_IDEX (clk_i, rst_n, WB_IDEX_i, MEM_IDEX_i, EX_IDEX_i, part_jump_addr_i, PCadder1_sum_i, RSdata_i, RTdata_i, SignExtend_i, ZeroFilled_i, WB_IDEX_o, MEM_IDEX_o, EX_IDEX_o, part_jump_addr_o, PCadder1_sum_o, RSdata_o, RTdata_o, SignExtend_o, ZeroFilled_o);
+module Pipe_IDEX (clk_i, rst_n, DHZ_i, CHZ_i, WB_IDEX_i, MEM_IDEX_i, EX_IDEX_i, part_jump_addr_i, PCadder1_sum_i, RSdata_i, RTdata_i, SignExtend_i, ZeroFilled_i, WB_IDEX_o, MEM_IDEX_o, EX_IDEX_o, part_jump_addr_o, PCadder1_sum_o, RSdata_o, RTdata_o, SignExtend_o, ZeroFilled_o);
 
 // Input and Output
 input clk_i;
 input rst_n;
+input DHZ_i;
+input CHZ_i;
 input [2-1:0] WB_IDEX_i; // left bit(MemtoReg), right bit(regWrite)
 input [2-1:0] MEM_IDEX_i; // left bit(memWrite), right bit(memRead)
 input [7-1:0] EX_IDEX_i; // [6](ALUsrc), [5:4](ALUop), [3](regDst), [2](jump), [1](branchType), [0](branch)
@@ -15,7 +17,7 @@ input [16-1:0] ZeroFilled_i;
 //input [4-1:0] func_i; // instruction[3:0]
 //input [3-1:0] RSaddr_i; // instruction[12:10]
 //input [3-1:0] RTaddr_i; // instruction[9:7]
-//input [3-1:0] RDaddr_i; // instruction[6:4]
+//input [3-1:0] RDaddr_i; // instruction[6:4] for R-format
 
 output wire [2-1:0] WB_IDEX_o; // left bit(MemtoReg), right bit(regWrite)
 output wire [2-1:0] MEM_IDEX_o; // left bit(memWrite), right bit(memRead)
@@ -67,15 +69,28 @@ always @(negedge rst_n or posedge clk_i) begin
         ZeroFilled_reg <= 0;
     end
     else begin
-        WB_IDEX_reg <= WB_IDEX_i;
-        MEM_IDEX_reg <= MEM_IDEX_i;
-        EX_IDEX_reg <= EX_IDEX_i;
-        part_jump_addr_reg <= part_jump_addr_i;
-        PCaddTwo_reg <= PCadder1_sum_i;
-        RSdata_reg <= RSdata_i;
-        RTdata_reg <= RTdata_i;
-        SignExtend_reg <= SignExtend_i;
-        ZeroFilled_reg <= ZeroFilled_i;
+        if(DHZ_i == 1 || CHZ_i == 1)begin
+            WB_IDEX_reg <= 0;
+            MEM_IDEX_reg <= 0;
+            EX_IDEX_reg <= 0;
+            part_jump_addr_reg <= 0;
+            PCaddTwo_reg <= 0;
+            RSdata_reg <= 0;
+            RTdata_reg <= 0;
+            SignExtend_reg <= 0;
+            ZeroFilled_reg <= 0;
+        end
+        else begin
+            WB_IDEX_reg <= WB_IDEX_i;
+            MEM_IDEX_reg <= MEM_IDEX_i;
+            EX_IDEX_reg <= EX_IDEX_i;
+            part_jump_addr_reg <= part_jump_addr_i;
+            PCaddTwo_reg <= PCadder1_sum_i;
+            RSdata_reg <= RSdata_i;
+            RTdata_reg <= RTdata_i;
+            SignExtend_reg <= SignExtend_i;
+            ZeroFilled_reg <= ZeroFilled_i;
+        end
     end
 end
 

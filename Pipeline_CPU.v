@@ -86,10 +86,15 @@ wire [3-1:0] RDaddr_MEMWB;
 wire [16-1:0] memReadData_MEMWB;
 wire [2-1:0] WB_MEMWB;
 
+// HD
+wire DHZ;
+wire CHZ;
+
 //module
 Program_Counter PC(
         .clk_i(clk_i),      
-        .rst_n(rst_n),     
+        .rst_n(rst_n),
+        .DHZ_i(DHZ),
         .pc_in_i(PC_in) ,   
         .pc_out_o(PC_ReadAddress) 
         );
@@ -122,7 +127,9 @@ Data_Memory DM(
 /*your code here*/
 Pipe_IFID IFID(
         .clk_i(clk_i), 
-        .rst_n(rst_n), 
+        .rst_n(rst_n),
+        .DHZ_i(DHZ), 
+        .CHZ_i(CHZ),
         .Instruction_i(Instruction), 
         .PCadder1_sum_i(PCadder1_sum), 
         .Instruction_o(Instruction_o_IFID), 
@@ -144,6 +151,8 @@ Decoder DC(
 Pipe_IDEX IDEX(
         .clk_i(clk_i), 
         .rst_n(rst_n), 
+        .DHZ_i(DHZ),
+        .CHZ_i(CHZ),
         .WB_IDEX_i( {MemtoReg, RegWrite} ), 
         .MEM_IDEX_i( {MemWrite, MemRead} ), 
         .EX_IDEX_i( {ALUSrc, ALUOp, RegDst, Jump, BranchType, Branch} ), 
@@ -248,6 +257,20 @@ Pipe_MEMWB MEMWB(
         .memReadData_o(memReadData_MEMWB), 
         .WB_MEMWB_o(WB_MEMWB)
 );
+HazardDetector HD(
+        .RSaddr_IFID_i(Instruction_o_IFID[12:10]), 
+        .RTaddr_IFID_i(Instruction_o_IFID[9:7]),
+        .RTaddr_IDEX_i(Instr_12to0_IDEX[9:7]),
+        .RDaddr_IDEX_i(Instr_12to0_IDEX[6:4]),
+        .RegDst_IDEX(EX_IDEX[3]),
+        .RDaddr_EXMEM_i(RDaddr_EXMEM), 
+        .RegWrite_IDEX(WB_IDEX[0]),
+        .RegWrite_EXMEM(WB_EXMEM[0]), 
+        .PCsrc_i(PCSrc), 
+        .Jump_IDEX(EX_IDEX[2]), 
+        .DHZ_o(DHZ), 
+        .CHZ_o(CHZ)
+);
 
 //deal with Program counter (including branch jump)
 Adder   ad1(
@@ -260,7 +283,7 @@ Shift_Left_one_extend sfloe(
         .data_o(Jump_shiftleft1)
 );
 Shift_Left_one sflo(
-        .data_i(SignExtend),
+        .data_i(SignExtend_IDEX),
         .data_o(SE_shiftleft1)
 );
 Adder   ad2(
@@ -269,7 +292,7 @@ Adder   ad2(
         .sum_o(PCadder2_sum)
 );
 Mux2to1 PCs(//PC source
-        .data0_i(PCadder1_sum_o_IDEX),
+        .data0_i(PCadder1_sum),
         .data1_i(PCadder2_sum), 
         .select_i(PCSrc),
         .data_o(PC_branch)
@@ -282,4 +305,3 @@ Mux2to1 jp(
         .data_o(PC_in)
 );
 endmodule
-

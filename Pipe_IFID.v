@@ -1,8 +1,10 @@
-module Pipe_IFID (clk_i, rst_n, Instruction_i, PCadder1_sum_i, Instruction_o, PCadder1_sum_o);
+module Pipe_IFID (clk_i, rst_n, DHZ_i, CHZ_i, Instruction_i, PCadder1_sum_i, Instruction_o, PCadder1_sum_o);
 
 // Input and Output
 input clk_i;
 input rst_n;
+input DHZ_i;
+input CHZ_i;
 input [16-1:0] Instruction_i;// send instruction
 input [16-1:0] PCadder1_sum_i;// send PC+2 to this module
 
@@ -23,7 +25,10 @@ always @(negedge rst_n or posedge clk_i) begin
         Instr_reg <= 0;
         PCaddTwo_reg <= 0;
     end
-    else begin
+    else if(CHZ_i == 1) begin
+        Instr_reg <= 16'b1100_0000_0000_0000;// bne r0,r0,0; r0 always equal to r0, so this can represent nop.
+    end
+    else if(DHZ_i == 0) begin
         Instr_reg <= Instruction_i;
         PCaddTwo_reg <= PCadder1_sum_i;
     end
