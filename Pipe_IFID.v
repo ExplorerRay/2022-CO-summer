@@ -36,7 +36,7 @@ end
 
 //Initialize to 0
 initial begin
-    Instr_reg = 0;
+    Instr_reg = 16'b1100_0000_0000_0000;
     PCaddTwo_reg = 0;
 end
     

@@ -19,9 +19,9 @@ output wire CHZ_o;//control hazard
 wire [3-1:0] addr_IDEX;
 assign addr_IDEX = (RegDst_IDEX == 0) ? RTaddr_IDEX_i : RDaddr_IDEX_i;
 
-assign DHZ_o = (RSaddr_IFID_i == addr_IDEX && RSaddr_IFID_i != 0 && RegWrite_IDEX == 1) ? 1 :
-        (RTaddr_IFID_i == addr_IDEX && RTaddr_IFID_i != 0 && RegWrite_IDEX == 1) ? 1 :
-        (RSaddr_IFID_i == RDaddr_EXMEM_i && RSaddr_IFID_i != 0 && RegWrite_EXMEM == 1) ? 1 :
-        (RTaddr_IFID_i == RDaddr_EXMEM_i && RTaddr_IFID_i != 0 && RegWrite_EXMEM == 1) ? 1 : 0;
+assign DHZ_o = (RSaddr_IFID_i == addr_IDEX && RegWrite_IDEX == 1) ? 1 :
+        (RTaddr_IFID_i == addr_IDEX && RegWrite_IDEX == 1) ? 1 :
+        (RSaddr_IFID_i == RDaddr_EXMEM_i && RegWrite_EXMEM == 1) ? 1 :
+        (RTaddr_IFID_i == RDaddr_EXMEM_i && RegWrite_EXMEM == 1) ? 1 : 0;
 assign CHZ_o = (PCsrc_i == 1 || Jump_IDEX == 1) ? 1 : 0;
 endmodule
