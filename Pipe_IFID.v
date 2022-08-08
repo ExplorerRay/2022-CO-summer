@@ -26,7 +26,7 @@ always @(negedge rst_n or posedge clk_i) begin
         PCaddTwo_reg <= 0;
     end
     else if(CHZ_i == 1) begin
-        Instr_reg <= 16'b1100_0000_0000_0000;
+        Instr_reg <= 16'b1100_0000_0000_0000;// bne r0,r0,0; r0 always equal to r0, so this can represent nop.
     end
     else if(DHZ_i == 0) begin
         Instr_reg <= Instruction_i;
@@ -36,7 +36,7 @@ end
 
 //Initialize to 0
 initial begin
-    Instr_reg = 16'b1100_0000_0000_0000;
+    Instr_reg = 0;
     PCaddTwo_reg = 0;
 end
     
